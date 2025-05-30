@@ -1,0 +1,24 @@
+.markdown-body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  padding: 1rem;
+}
+
+.markdown-body ol,
+.markdown-body ul {
+  padding-left: 1.5rem; /* Indent bullet and number lists */
+  margin-bottom: 1rem;
+}
+
+.markdown-body li {
+  margin-bottom: 0.5rem;
+}
+
+.markdown-body strong {
+  font-weight: 600;
+}
+
+.markdown-body p {
+  margin-bottom: 1rem;
+}
