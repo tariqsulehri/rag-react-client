@@ -1,6 +1,6 @@
-# AI Chat Assistant with Voice Features
+# AI Chat Assistant with Voice Features and PostgreSQL Integration
 
-A React-based chat interface with optional voice input and output capabilities.
+A React-based chat interface with optional voice input/output capabilities and PostgreSQL database integration.
 
 ## Features
 
@@ -11,6 +11,7 @@ A React-based chat interface with optional voice input and output capabilities.
 - Text-to-speech synthesis
 - Responsive design
 - Markdown support for messages
+- PostgreSQL database integration
 
 ## Voice Features
 
@@ -32,6 +33,13 @@ A React-based chat interface with optional voice input and output capabilities.
 - Automatically detects and selects Urdu voice if available
 - Voice selection persists across sessions
 
+## Database Integration
+
+- PostgreSQL database connection
+- Secure data storage
+- Efficient query handling
+- Real-time data synchronization
+
 ## Browser Support
 
 Voice features require a modern browser that supports the Web Speech API:
@@ -47,7 +55,8 @@ Voice features require a modern browser that supports the Web Speech API:
 ```bash
 npm install
 ```
-3. Start the development server:
+3. Configure PostgreSQL connection in `.env` file
+4. Start the development server:
 ```bash
 npm start
 ```
@@ -86,6 +95,12 @@ npm start
 - Supports multiple voices and languages
 - Configurable speech parameters (rate, pitch, volume)
 - Automatic cleanup of ongoing speech
+
+### Database Integration
+- PostgreSQL connection pooling
+- Prepared statements for security
+- Connection error handling
+- Automatic reconnection
 
 ### State Management
 - Voice features can be toggled on/off
