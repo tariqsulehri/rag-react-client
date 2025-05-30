@@ -1,41 +1,94 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Box, TextField, IconButton, Paper } from '@mui/material';
+import { Send, Mic, MicOff } from '@mui/icons-material';
 import styles from './ChatInput.module.css';
 
-const ChatInput = ({
-  question,
-  setQuestion,
-  isVoiceEnabled,
-  isListening,
-  handleVoiceInput,
-  stopListening,
-  sendQuestion,
-  handleKeyDown
-}) => {
+const ChatInput = ({ onSendMessage, isVoiceEnabled }) => {
+  const [message, setMessage] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (message.trim()) {
+      onSendMessage(message);
+      setMessage('');
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
+
+  const toggleRecording = () => {
+    setIsRecording(!isRecording);
+    // Add voice recording logic here
+  };
+
   return (
-    <div className={styles.inputContainer}>
-      <textarea
-        className={styles.input}
-        placeholder="Type your question here..."
-        value={question}
-        rows={3}
-        onChange={(e) => setQuestion(e.target.value)}
-        onKeyDown={handleKeyDown}
-      />
-      <div className={styles.buttons}>
-        {isVoiceEnabled && (
-          <button 
-            className={`${styles.voiceButton} ${isListening ? styles.listening : ''}`}
-            onClick={isListening ? stopListening : handleVoiceInput}
-            title={isListening ? "Stop listening" : "Start voice input"}
+    <Paper
+      elevation={2}
+      className={styles.inputContainer}
+      sx={{
+        p: 2,
+        borderRadius: 0,
+        borderTop: '1px solid',
+        borderColor: 'divider'
+      }}
+    >
+      <form onSubmit={handleSubmit} className={styles.inputForm}>
+        <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end' }}>
+          <TextField
+            fullWidth
+            multiline
+            maxRows={4}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Type your message..."
+            variant="outlined"
+            size="small"
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: 2,
+                backgroundColor: 'background.paper'
+              }
+            }}
+          />
+          {isVoiceEnabled && (
+            <IconButton
+              color={isRecording ? 'error' : 'primary'}
+              onClick={toggleRecording}
+              sx={{
+                height: 40,
+                width: 40,
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.1)'
+                }
+              }}
+            >
+              {isRecording ? <MicOff /> : <Mic />}
+            </IconButton>
+          )}
+          <IconButton
+            color="primary"
+            type="submit"
+            disabled={!message.trim()}
+            sx={{
+              height: 40,
+              width: 40,
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.1)'
+              }
+            }}
           >
-            {isListening ? '🎤' : '🎙️'}
-          </button>
-        )}
-        <button className={styles.sendButton} onClick={sendQuestion}>
-          Send
-        </button>
-      </div>
-    </div>
+            <Send />
+          </IconButton>
+        </Box>
+      </form>
+    </Paper>
   );
 };
 
