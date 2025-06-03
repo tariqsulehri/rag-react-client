@@ -1,11 +1,57 @@
-import React, { useState } from 'react';
-import { Box, TextField, IconButton, Paper } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import { Box, TextField, IconButton, Paper, Tooltip } from '@mui/material';
 import { Send, Mic, MicOff } from '@mui/icons-material';
 import styles from './ChatInput.module.css';
 
 const ChatInput = ({ onSendMessage, isVoiceEnabled }) => {
   const [message, setMessage] = useState('');
-  const [isRecording, setIsRecording] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [error, setError] = useState(null);
+  const recognitionRef = useRef(null);
+
+  useEffect(() => {
+    // Initialize speech recognition
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onstart = () => {
+        console.log('Voice recognition started');
+        setIsListening(true);
+        setError(null);
+      };
+
+      recognitionRef.current.onresult = (event) => {
+        console.log('Voice recognition result:', event);
+        const current = event.resultIndex;
+        const transcript = event.results[current][0].transcript;
+        setMessage(transcript);
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setError(event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        console.log('Voice recognition ended');
+        setIsListening(false);
+      };
+    } else {
+      setError('Speech recognition not supported in this browser');
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,13 +68,26 @@ const ChatInput = ({ onSendMessage, isVoiceEnabled }) => {
     }
   };
 
-  const toggleRecording = () => {
-    setIsRecording(!isRecording);
-    // Add voice recording logic here
+  const toggleVoiceInput = () => {
+    try {
+      if (!recognitionRef.current) {
+        setError('Speech recognition not initialized');
+        return;
+      }
+
+      if (isListening) {
+        recognitionRef.current.stop();
+      } else {
+        recognitionRef.current.start();
+      }
+    } catch (err) {
+      console.error('Error toggling voice input:', err);
+      setError(err.message);
+    }
   };
 
   return (
-    <Paper
+    <Paper 
       elevation={2}
       className={styles.inputContainer}
       sx={{
@@ -58,19 +117,21 @@ const ChatInput = ({ onSendMessage, isVoiceEnabled }) => {
             }}
           />
           {isVoiceEnabled && (
-            <IconButton
-              color={isRecording ? 'error' : 'primary'}
-              onClick={toggleRecording}
-              sx={{
-                height: 40,
-                width: 40,
-                '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.1)'
-                }
-              }}
-            >
-              {isRecording ? <MicOff /> : <Mic />}
-            </IconButton>
+            <Tooltip title={error || (isListening ? "Stop listening" : "Start voice input")}>
+              <IconButton
+                color={isListening ? 'error' : error ? 'error' : 'primary'}
+                onClick={toggleVoiceInput}
+                sx={{
+                  height: 40,
+                  width: 40,
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.1)'
+                  }
+                }}
+              >
+                {isListening ? <Mic /> : <MicOff />}
+              </IconButton>
+            </Tooltip>
           )}
           <IconButton
             color="primary"

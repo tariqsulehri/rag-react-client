@@ -11,8 +11,8 @@ import styles from './ChatInterface.module.css';
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
-  const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(true); // Enable voice by default
   const messagesEndRef = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -130,7 +130,10 @@ const ChatInterface = () => {
               </AnimatePresence>
               <div ref={messagesEndRef} />
             </Box>
-            <ChatInput onSendMessage={handleSendMessage} isVoiceEnabled={isVoiceEnabled} />
+            <ChatInput 
+              onSendMessage={handleSendMessage} 
+              isVoiceEnabled={isVoiceEnabled} 
+            />
           </Paper>
         </Box>
       </Container>
