@@ -29,8 +29,8 @@ const ChatHeader = ({
               mixBlendMode: 'multiply'
             }} 
           />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: '#333' }}>
-            AI Chat Assistant
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Tkxel AI Assistant
           </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 'auto' }}>

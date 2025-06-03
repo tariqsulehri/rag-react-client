@@ -1,4 +1,4 @@
-# AI Chat Assistant with Voice Support
+# Tkxel AI Assistant with Voice Support
 
 A modern React-based chat interface with AI integration and voice capabilities.
 
@@ -50,7 +50,7 @@ src/
   <Toolbar>
     <Box>
       <img src="/logo.png" alt="Logo" />
-      <Typography>AI Chat Assistant</Typography>
+      <Typography>Tkxel AI Assistant</Typography>
     </Box>
     <Box>
       <FormControl>
