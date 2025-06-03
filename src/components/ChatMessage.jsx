@@ -43,13 +43,14 @@ const ChatMessage = ({ message, isVoiceEnabled, isSpeaking, speakText, stopSpeak
             <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
               {message.role === 'user' ? 'You' : 'AI Assistant'}
             </Typography>
-            {message.role === 'ai' && (
+            {message.role === 'ai' && isVoiceEnabled && (
               <IconButton
                 size="small"
                 onClick={handleSpeak}
+                color={isSpeaking ? 'primary' : 'default'}
                 sx={{
-                  opacity: isVoiceEnabled ? 0.7 : 0,
-                  transition: 'opacity 0.2s ease',
+                  opacity: 0.7,
+                  transition: 'all 0.2s ease',
                   '&:hover': {
                     opacity: 1,
                     backgroundColor: 'rgba(0, 0, 0, 0.1)'

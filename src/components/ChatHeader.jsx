@@ -44,7 +44,7 @@ const ChatHeader = ({
             >
               {availableVoices.map((voice) => (
                 <MenuItem key={voice.name} value={voice.name}>
-                  {voice.name}
+                  {voice.name} ({voice.lang})
                 </MenuItem>
               ))}
             </Select>

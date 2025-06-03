@@ -11,7 +11,7 @@ const useVoice = () => {
       const voices = window.speechSynthesis.getVoices();
       setAvailableVoices(voices);
       
-      // Find Google Hindi voice
+      // Find Hindi voice as default
       const hindiVoice = voices.find(voice => 
         voice.name.includes('Google') && 
         voice.lang.includes('hi-IN')
@@ -20,7 +20,6 @@ const useVoice = () => {
       if (hindiVoice) {
         setSelectedVoice(hindiVoice.name);
       } else if (voices.length > 0) {
-        // Fallback to first available voice if Hindi voice not found
         setSelectedVoice(voices[0].name);
       }
     };
@@ -54,8 +53,8 @@ const useVoice = () => {
       utterance.voice = voice;
     }
 
-    // Set language to Hindi if using Hindi voice
-    if (selectedVoice.includes('hi-IN')) {
+    // Set language based on selected voice
+    if (voice?.lang.includes('hi-IN')) {
       utterance.lang = 'hi-IN';
     }
 
