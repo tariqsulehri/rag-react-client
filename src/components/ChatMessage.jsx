@@ -1,31 +1,72 @@
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { Box, Typography, IconButton, Avatar } from '@mui/material';
+import { VolumeUp, VolumeOff } from '@mui/icons-material';
+import { Person, SmartToy } from '@mui/icons-material';
 import styles from './ChatMessage.module.css';
 
 const ChatMessage = ({ message, isVoiceEnabled, isSpeaking, speakText, stopSpeaking }) => {
+  const handleSpeak = () => {
+    if (isSpeaking) {
+      stopSpeaking();
+    } else {
+      // Create a temporary div to extract text from HTML
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = message.content;
+      const textContent = tempDiv.textContent || tempDiv.innerText || '';
+      speakText(textContent);
+    }
+  };
+
   return (
-    <div className={`${styles.message} ${styles[message.role]}`}>
-      <div className={styles.messageHeader}>
-        <span className={styles.messageRole}>
-          {message.role === 'user' ? 'You' : 'AI Assistant'}
-        </span>
-        {message.role === 'ai' && isVoiceEnabled && (
-          <button
-            className={`${styles.speakButton} ${isSpeaking ? styles.speaking : ''}`}
-            onClick={isSpeaking ? stopSpeaking : () => speakText(message.content)}
-            title={isSpeaking ? "Stop speaking" : "Speak message"}
-          >
-            {isSpeaking ? '🔇' : '🔊'}
-          </button>
-        )}
-      </div>
-      <div className={styles.messageContent}>
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {message.content}
-        </ReactMarkdown>
-      </div>
-    </div>
+    <Box className={styles.messageWrapper}>
+      <Box
+        className={`${styles.message} ${styles[message.role]}`}
+        sx={{
+          backgroundColor: message.isError ? '#ffebee' : undefined,
+          color: message.isError ? '#c62828' : undefined,
+          display: 'flex',
+          gap: 2,
+          alignItems: 'flex-start'
+        }}
+      >
+        <Avatar
+          sx={{
+            bgcolor: message.role === 'user' ? 'primary.main' : 'secondary.main',
+            width: 32,
+            height: 32
+          }}
+        >
+          {message.role === 'user' ? <Person /> : <SmartToy />}
+        </Avatar>
+        <Box sx={{ flex: 1 }}>
+          <Box className={styles.messageHeader}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+              {message.role === 'user' ? 'You' : 'AI Assistant'}
+            </Typography>
+            {message.role === 'ai' && isVoiceEnabled && (
+              <IconButton
+                size="small"
+                onClick={handleSpeak}
+                color={isSpeaking ? 'primary' : 'default'}
+                sx={{
+                  opacity: 0.7,
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    opacity: 1,
+                    backgroundColor: 'rgba(0, 0, 0, 0.1)'
+                  }
+                }}
+              >
+                {isSpeaking ? <VolumeOff /> : <VolumeUp />}
+              </IconButton>
+            )}
+          </Box>
+          <Box className={styles.messageContent}>
+            <div dangerouslySetInnerHTML={{ __html: message.content }} />
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

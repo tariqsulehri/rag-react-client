@@ -1,9 +1,18 @@
-import "./App.css";
-import MarkdownRenderer from "./components/MarkdownRenderer";
-export default function App() {
+import React from 'react';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import ChatInterface from './components/ChatInterface';
+import theme from './theme';
+import './App.css';
+
+function App() {
   return (
-    <div className="app-container">
-      <MarkdownRenderer />
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div className="App">
+        <ChatInterface />
+      </div>
+    </ThemeProvider>
   );
 }
+
+export default App;

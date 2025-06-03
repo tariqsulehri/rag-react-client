@@ -1,48 +1,69 @@
 import React from 'react';
-import { formatVoiceName } from '../utils/voiceUtils';
-import styles from './ChatHeader.module.css';
+import { AppBar, Toolbar, Typography, IconButton, Box, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Mic, MicOff } from '@mui/icons-material';
 
-const ChatHeader = ({ 
-  isSidebarOpen, 
-  setIsSidebarOpen,
+const ChatHeader = ({
   isVoiceEnabled,
-  voiceSupport,
+  setIsVoiceEnabled,
   availableVoices,
   selectedVoice,
-  toggleVoiceFeatures,
-  handleVoiceChange 
+  setSelectedVoice
 }) => {
   return (
-    <header className={styles.header}>
-      <button className={styles.sidebarToggle} onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-        ☰
-      </button>
-      <h1 className={styles.title}>AI Chat Assistant</h1>
-      {voiceSupport.recognition && voiceSupport.synthesis && (
-        <div className={styles.voiceControls}>
-          <button 
-            className={`${styles.voiceToggle} ${isVoiceEnabled ? styles.enabled : ''}`}
-            onClick={toggleVoiceFeatures}
-            title={isVoiceEnabled ? "Disable voice features" : "Enable voice features"}
-          >
-            {isVoiceEnabled ? '🔊' : '🔇'}
-          </button>
-          {isVoiceEnabled && (
-            <select 
-              value={selectedVoice?.name || ''} 
-              onChange={handleVoiceChange}
-              className={styles.voiceSelect}
+    <AppBar 
+      position="static" 
+      sx={{ 
+        backgroundColor: 'white',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+      }}
+    >
+      <Toolbar>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <img 
+            src="/logo.png" 
+            alt="Logo" 
+            style={{ 
+              height: '40px', 
+              width: 'auto',
+              marginRight: '8px',
+              mixBlendMode: 'multiply'
+            }} 
+          />
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Tkxel AI Assistant
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, ml: 'auto' }}>
+          <FormControl size="small" sx={{ minWidth: 200 }}>
+            <InputLabel>Voice</InputLabel>
+            <Select
+              value={selectedVoice}
+              label="Voice"
+              onChange={(e) => setSelectedVoice(e.target.value)}
+              disabled={!isVoiceEnabled}
             >
               {availableVoices.map((voice) => (
-                <option key={voice.name} value={voice.name}>
-                  {formatVoiceName(voice)}
-                </option>
+                <MenuItem key={voice.name} value={voice.name}>
+                  {voice.name} ({voice.lang})
+                </MenuItem>
               ))}
-            </select>
-          )}
-        </div>
-      )}
-    </header>
+            </Select>
+          </FormControl>
+          <IconButton
+            color={isVoiceEnabled ? 'primary' : 'default'}
+            onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
+            sx={{
+              transition: 'all 0.2s ease',
+              '&:hover': {
+                transform: 'scale(1.1)'
+              }
+            }}
+          >
+            {isVoiceEnabled ? <Mic /> : <MicOff />}
+          </IconButton>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 
